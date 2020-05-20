@@ -15,7 +15,7 @@
 	<context:component-scan base-package="com.etoak">
 		<!-- 表示只扫描@Controller注解 -->
 		<context:include-filter type="annotation" 
-		expression="org.springframework.stereotype.Controller"/>
+		expression="org.springframework.web.bind.annotation.RestController"/>
 	</context:component-scan>
 	<!-- 开启spring mvc配置 -->
 	<!-- 
@@ -40,7 +40,7 @@
 	<!-- http://ip:port/context/s/jquery.js -->
 	<!-- location 属性定义静态资源位置 -->
 	<!-- mapping属性  定义url 可以使用通配符 一个* 表示只能访问一层目录 -->
-	<mvc:resources location="classpath:/static/" mapping="/**" />
+	<mvc:resources location="classpath:/static/" mapping="/s/**" />
 
 	
 	<!-- 视图解析器InternalResourceViewResolver -->

@@ -44,7 +44,6 @@ public class SimpleController {
 			String name){
 		System.out.println("id param - " + id);
 		System.out.println("name param - " + name);
-		
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("result","ModelAndView传值");
 		mv.setViewName("param");
