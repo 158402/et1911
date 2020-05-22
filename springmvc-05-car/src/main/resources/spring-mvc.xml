@@ -17,14 +17,25 @@
 		expression="org.springframework.web.bind.annotation.RestController"/>
 		<context:include-filter type="annotation" 
 		expression="org.springframework.stereotype.Controller"/>
+		
+		<!--  -->
+		<context:exclude-filter type="annotation"
+		expression="org.springframework.stereotype.Service" />
+		
+		<context:exclude-filter type="annotation"
+		expression="org.springframework.stereotype.Repository" />
+		
 	</context:component-scan>
 	<!-- 开启spring mvc配置 -->
 	
 	<mvc:annotation-driven></mvc:annotation-driven>
 	
 	<!-- 3.将静态资源 （css js）等交给servlet容器内置得名字交default -->
-	
 	<mvc:default-servlet-handler/>
+	
+	<!-- 定义图片的访问方式 -->
+	<mvc:resources location="file:d:/upload/" mapping="/pic/**" />
+	
 	<!-- 定制静态资源的位置和访问路径 -->
 	
 	<!-- 整合Thymeleaf -->
@@ -46,21 +57,14 @@
 		<property name="templateEngine" ref="templateEngine" />
 		<property name="characterEncoding" value="UTF-8" />
 	</bean>
+	
+	<!-- 文件上传解析器 -->
+	<bean id="multipartResolver" 
+	class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	<!-- 文件大小限制2M -->
+	<property name="maxUploadSize" value="2097152"></property>
+	</bean>
 </beans>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
