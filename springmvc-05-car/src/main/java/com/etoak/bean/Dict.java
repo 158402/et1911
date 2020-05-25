@@ -13,7 +13,6 @@ public class Dict implements Serializable{
 	private String name;
 	private String value;
 	private Integer sort;
-	
-	
+
 
 }

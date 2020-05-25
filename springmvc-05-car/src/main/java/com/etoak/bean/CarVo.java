@@ -1,0 +1,26 @@
+package com.etoak.bean;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class CarVo extends Car {
+	//级别名称
+	private String levelName;
+	//变速箱名称
+	private String gearboxName;
+	//排量
+	private String outputVolumeName;
+
+/*	// 时间范围
+	@JsonIgnore
+	private String regdateRange;
+
+	// 价格数据
+	@JsonIgnore
+	private String[] priceList;
+*/
+}
