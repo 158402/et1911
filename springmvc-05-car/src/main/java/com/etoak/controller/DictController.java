@@ -15,7 +15,7 @@ import com.etoak.service.DictService;
 import ch.qos.logback.classic.Logger;
 
 
-@RestController
+@RestController  //等于 ResponseBody + controller
 @RequestMapping("/dict")
 public class DictController {
 	
@@ -24,10 +24,10 @@ public class DictController {
 	@Autowired 
 	DictService dictService;
 	
-	/**
-	 * spring mvc 提供了一个注解@PathVariable
-	 * **/
-	@GetMapping("/{groupId}")
+	/**   
+	 * spring mvc 提供了一个注解@PathVariable：把请求路径当做参数
+	 * **/ 
+	@GetMapping("/{groupId}")//groupId:相当于对应数据库的任意字段 都可以进行查询字典
 	public List<Dict> queryList(@PathVariable String groupId){
 		log.info("param groupId - {}",groupId);
 		return dictService.queryList(groupId);

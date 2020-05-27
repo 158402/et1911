@@ -56,8 +56,8 @@ public class CarController {
 	@ResponseBody //@ResponseBody:写@ResponseBody相当于给前端一个值 不写就相当于跳转页面 
 	public PageVo<CarVo> queryList(@RequestParam(required = false,defaultValue = "1")int pageNum,
 			@RequestParam(required = false,defaultValue="8")int pageSize,
-				CarVo carVo){
-		return carService.queryList(pageNum, pageSize, carVo);
+				CarVo carVo,String[] priceList){
+		return carService.queryList(pageNum, pageSize, carVo, priceList);
 	}
 	
 	
@@ -108,9 +108,6 @@ public class CarController {
 		return "redirect:/car/toAdd";
 	}
 	
-	
-
-
 	/**
 	 * 查询品牌列表
 	 * 
@@ -134,6 +131,5 @@ public class CarController {
 		return carService.getSeriesByBrand(brand);
 	}
 
-	
 	
 }

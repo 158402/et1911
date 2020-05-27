@@ -26,13 +26,19 @@
 		<context:exclude-filter type="annotation"
 		expression="org.springframework.stereotype.Repository" />
 		
-	</context:component-scan>
+		</context:component-scan>
+	
 	<!-- 开启spring mvc配置 -->
 	
 	<mvc:annotation-driven></mvc:annotation-driven>
 	
 	<!-- 3.将静态资源 （css js）等交给servlet容器内置得名字交default -->
 	<mvc:default-servlet-handler/>
+	
+	<!-- 只写工程名 直接跳到index -->
+	<mvc:view-controller path="/" view-name="index" />
+	
+	<mvc:view-controller path="/user/toLogin" view-name="login" />
 	
 	<!-- 定义图片的访问方式 -->
 	<mvc:resources location="file:d:/upload/" mapping="/pic/**" />
@@ -65,6 +71,19 @@
 	<!-- 文件大小限制2M -->
 	<property name="maxUploadSize" value="2097152"></property>
 	</bean>
+	
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<!-- 配置需要拦截的地址 /**表示拦截所有层级的请求 -->
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/static/**"/>
+			<mvc:exclude-mapping path="/code"/>
+			<mvc:exclude-mapping path="/user/toLogin"/>
+			<mvc:exclude-mapping path="/user/login"/>
+			<bean class="com.etoak.interceptor.LoginInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
 </beans>
 
 

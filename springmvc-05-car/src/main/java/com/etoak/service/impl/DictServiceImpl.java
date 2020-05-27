@@ -16,7 +16,7 @@ public class DictServiceImpl implements DictService {
 	
 	@Override
 	public List<Dict> queryList(String groupId) {
-		// TODO Auto-generated method stub
+		
 		return dictMapper.queryList(groupId);
 	}
 

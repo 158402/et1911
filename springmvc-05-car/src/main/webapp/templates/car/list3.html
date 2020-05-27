@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link th:href="@{/static/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+<title>车辆列表</title>
+
+<style type="text/css">
+	.carPage{
+		width: 260px;
+		margin: 0px auto;
+		padding-top:20px;	
+		
+	},
+	
+</style>
+</head>
+<body>
+   <h2>车辆列表</h2>
+   <!-- 查询条件 -->
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-info">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          	查询条件
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+        <form class="form-horizontal" role="form">
+        	<!-- 1.品牌条件 -->
+        	<div class="form-group">
+			    <label for="brand" class="col-sm-2 control-label">品牌</label>
+			    <div class="col-sm-10 input-group" id="brand">
+			    	
+			    </div>
+			</div>
+			<!-- 1.车系条件 -->
+        	<div class="form-group">
+			    <label for="series" class="col-sm-2 control-label">车系</label>
+			    <div class="col-sm-10 input-group" id="series">
+			    	
+			    </div>
+			</div>
+			
+			<div class="form-group">
+			   <!-- 级别 -->
+			   <label for="level" class="col-sm-2 control-label">级别</label>
+			   <div class="col-sm-3">
+			     <select class="form-control" name="level" id="level">
+			      <option value=''>--请选择--</option>
+			     </select>
+			   </div>
+			   
+			   <!-- 变速箱 -->
+			   <label for="gearbox" class="col-sm-2 control-label">变速箱</label>
+			   <div class="col-sm-3">
+			     <select class="form-control" name="gearbox" id="gearbox">
+			      <option value=''>--请选择--</option>
+			     </select>
+			   </div>
+			</div>
+			
+			<div class="form-group">
+			   <!-- 排量 -->
+			   <label for="output_volume" class="col-sm-2 control-label">
+			   排量</label>
+			   <div class="col-sm-3">
+			     <select class="form-control" name="output_volume" 
+			     id="output_volume">
+			      <option value=''>--请选择--</option>
+			     </select>
+			   </div>
+			   
+			   <!-- 归属地 -->
+			   <label for="location" class="col-sm-2 control-label">
+			   	归属地</label>
+			   <div class="col-sm-3">
+			     <input class="form-control" type="text" name="location"
+			      id="location">
+			   </div> 
+			</div>
+			
+			
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+	<!-- 车辆列表展示 -->
+	<div class="container-fluid">
+		<div class="row" id="carList">
+		</div>
+	</div>
+	<div class="carPage">
+		<button id="firstPage" class="btn btn-primary" 
+			type="button">首页</button>
+			
+		<button id="prePage" class="btn btn-success" 
+			type="button">上一页</button>
+			
+		<button id="nextPage" class="btn btn-info" 
+			type="button">下一页</button>
+			
+		<button id="lastPage" class="btn btn-danger" 
+			type="button">尾页</button>
+	</div>
+   
+<script th:src="@{/static/js/jquery/jquery.min.js}" type="text/javascript"></script>
+<script th:src="@{/static/bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
+<script th:src="@{/static/js/validate/jquery.validate.min.js}" type="text/javascript"></script>
+<script th:src="@{/static/js/validate/messages_zh.min.js}" type="text/javascript"></script>
+<script th:src="@{/static/js/laydate/laydate.js}" type="text/javascript"></script>
+<script th:inline="javascript" type="text/javascript">
+//request对象中的contextPath
+	const path = /*[[${#request.getContextPath()}]]*/
+	
+	let pageNum,pageSize = 8;
+	//当前页
+	let currentPage = 1;
+	let pageCount = '';
+	$(function(){
+		et1911.queryList();
+		et1911.queryBrand();
+		querySeries('');
+		et1911.queryDict('level')
+		et1911.queryDict('gearbox')
+		et1911.queryDict('output_volume')
+		
+		$('#series').change(function(){
+			et1911.queryList();
+		})
+		$('#level').change(function(){
+			et1911.queryList();
+		})
+		$('#gearbox').change(function(){
+			et1911.queryList();
+		})
+		$('#output_volume').change(function(){
+			et1911.queryList();
+		})
+		$('#location').change(function(){
+			et1911.queryList();
+		})
+		
+		$('#firstPage').click(function(){
+			et1911.queryList();
+		});
+		//上一页
+		$('#prePage').click(function(){
+			et1911.queryList(--currentPage);
+		});
+		//下一页
+		$('#nextPage').click(function(){
+			et1911.queryList(++currentPage);
+		});
+		//总页数
+		$('#lastPage').click(function(){
+			et1911.queryList(pageCount);
+		})
+	});
+	
+	
+	let et1911 = {
+			
+				
+	
+		queryList:function(pageNum,pageSize){
+			//如果pageNum不传（或者传入'' undefined）这时就选取后面的值
+			pageNum = pageNum || 1
+			pageSize = pageSize || 4
+			
+			
+			//let brand = $('input[name="brand"]:checked').val() || ''
+			let brand = $('input[name="series"]:checked').val() || ''
+			let level = $('#level').val() || ''
+			let gearbox = $('#gearbox').val()|| ''
+			let output_volume = $('#output_volume').val()|| ''
+			let location = $('#location').val()|| ''
+
+			
+			$.ajax({
+				url:path + '/car/list',
+				type:'GET',
+				data:'pageNum=' + pageNum + '&pageSize=' + pageSize
+				+ '&brand='+brand,
+				dataType:'json',
+				success:function(res){
+					//当前页
+					currentPage = res.pageNum
+					//总页数
+					pageCount = res.pageCount
+					
+					let divs = '';
+					$.each(res.rows,function(index,car){
+						divs+="<div class='col-md-3'>"
+						+"<img class='img-thumbnail' src='"+ path + car.pic+"'>"
+						+"<p>"+car.brand+"/"+car.series+"</p>"
+						+"<p>"+car.price+"万元"+"</p>"
+						+"<p>"+car.gearboxName+"</p>"
+						+"<p>"+car.location+"</p>"
+						+"</div>"
+					})
+					$('#carList').html(divs);
+					//如果是第一页把首页和上一页按钮视为不可用
+					if(res.first){
+						$('#fistPage').attr('disabled','disabled')
+						$('#prePage').attr('disabled','disabled')
+					}else{
+						$('#fistPage').removeAttr('disabled')
+						$('#prePage').removeAttr('disabled')
+					}
+					//如果是最后一页 把尾页和下一页按钮为不可用、
+					if(res.last){
+						$('#lastPage').attr('disabled','disabled')
+						$('#nextPage').attr('disabled','disabled')
+					}else{
+						$('#lastPage').removeAttr('disabled')
+						$('#nextPage').removeAttr('disabled')
+					}
+				}
+			})
+		},
+	
+	
+	queryBrand:function(){
+		$.ajax({
+			url:path + '/car/getBrand',
+			type:'GET',
+			data:'',
+			dataType:'json',
+			success:function(res){
+				//alert(res);
+				let divs = '<div class="col-md-1">';
+				$.each(res,function(index,brand){
+					divs+="<button type='button' class='btn btn-default' onclick=\"querySeries('"+brand+"')\">"+brand+"</button>"
+					+"</div>";
+				})
+			
+				$('#brand').html(divs);
+			}
+			
+		})
+	},
+	// 查询级别、排量、变速箱
+	// groupId -> level、output_volume、gearbox
+	queryDict: function(groupId) {
+		$.ajax({
+			url: path + '/dict/' + groupId,
+			type: 'GET',
+			dataType: 'json',
+			data: '',
+			success: function(res) {
+				let options = '<option value="">--请选择--</option>';
+				for(let dict of res) {
+					options += "<option value='" +dict.value+ "'>"
+					        + dict.name
+					        + "</option>";
+				}
+				$('#' + groupId).html(options);
+			}
+		})
+	}
+}
+	
+	function querySeries(brand){
+		$.ajax({
+			url:path + '/car/getSeries',
+			type:'GET',
+			data:'brand='+brand,
+			dataType:'json',
+			success:function(res){
+				//alert(res);
+				let divs = '<div class="col-md-1">';
+				$.each(res,function(index,car){
+					divs+="<button type='button' class='btn btn-default' onclick=\"getSeriesByBrand('"+car+"')\">"+car+"</button>"
+					+"</div>";
+				})
+			
+				$('#series').html(divs);
+			}
+			
+		})
+	}
+	 
+	
+	
+	
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

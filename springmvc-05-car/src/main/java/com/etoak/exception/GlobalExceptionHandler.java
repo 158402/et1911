@@ -15,6 +15,18 @@ import sun.util.logging.resources.logging;
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+	
+	@ExceptionHandler(Et1911LoginException.class)
+	public ModelAndView handlLoginException(Et1911LoginException e){
+		String msg= e.getMessage();
+		log.error(msg,e);
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("error",msg);
+		mv.setViewName("login");
+		return mv;
+	}
+	
+	
 	@ExceptionHandler(ParamException.class)
 	/**
 	 * 表示这个方法只拦截ParanException异常
