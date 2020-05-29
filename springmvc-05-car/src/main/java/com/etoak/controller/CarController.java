@@ -93,7 +93,6 @@ public class CarController {
 		
 		//新文件名
 		String uuid = UUID.randomUUID().toString().replaceAll("-","");
-		
 		String newFilename = uuid +"_" + originalFilename;
 		//目标文件d:/upload/uuid_老文件名.jpg
 		File destFile = new File("d:/upload",newFilename);

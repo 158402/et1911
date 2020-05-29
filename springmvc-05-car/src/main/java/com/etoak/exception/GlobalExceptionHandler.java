@@ -19,6 +19,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(Et1911LoginException.class)
 	public ModelAndView handlLoginException(Et1911LoginException e){
 		String msg= e.getMessage();
+		System.out.println("msg====>"+msg);
 		log.error(msg,e);
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("error",msg);

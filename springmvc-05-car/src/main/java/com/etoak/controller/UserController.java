@@ -42,13 +42,14 @@ public class UserController {
 	}
 	
 	@PostMapping("/login")
-	public String login(@RequestParam String name,
+	public String login(@RequestParam String name, //@RequestParam 获取前段页面参数
 			@RequestParam String password,
 			@RequestParam String code,
 			HttpServletRequest request){
 		//取出session中的验证码 和请求参数中的验证码进行比对
 		HttpSession session = request.getSession();
 		Object sessionCode = session.getAttribute("code");
+		System.out.println("session===>"+session.getAttribute("code"));
 		if(!code.equals(sessionCode)){
 			throw new Et1911LoginException("验证码不正确");
 		}
@@ -65,6 +66,7 @@ public class UserController {
 		//将用户密码设置为null 重新获取session
 		user.setPassword(null);
 		session.setAttribute("user", user);
+		System.out.println("session===>"+session.getAttribute("code")+session.getAttribute("user"));
 		//登陆成功 跳到index页面
 		return "redirect:/";
 	}
